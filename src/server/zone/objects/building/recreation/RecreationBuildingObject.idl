@@ -1,0 +1,19 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.building.recreation;
+
+import server.zone.objects.building.BuildingObject;
+
+class RecreationBuildingObject extends BuildingObject {
+
+	public RecreationBuildingObject() {		
+		Logger.setLoggingName("RecreationBuildingObject");
+	}
+	
+	@read	
+	public boolean isRecreationalBuildingObject() {
+		return true;
+	}
+}

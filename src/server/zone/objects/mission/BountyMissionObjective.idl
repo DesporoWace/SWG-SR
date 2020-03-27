@@ -1,0 +1,153 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.mission;
+
+import engine.util.Observable;
+import server.zone.objects.mission.MissionObject;
+import server.zone.objects.mission.MissionObjective;
+import server.zone.objects.mission.MissionObserver;
+import server.zone.objects.scene.SceneObject;
+import server.zone.objects.creature.ai.AiAgent;
+import server.zone.objects.creature.CreatureObject;
+include templates.TemplateReference;
+include templates.SharedObjectTemplate;
+import server.zone.objects.mission.bountyhunter.BountyHunterDroid;
+import server.zone.objects.mission.bountyhunter.events.BountyHunterTargetTask;
+include server.zone.objects.mission.bountyhunter.events.FindTargetTaskList;
+import system.thread.Mutex;
+import engine.core.ManagedObject;
+include engine.log.Logger;
+include engine.util.u3d.Vector3;
+
+@json
+class BountyMissionObjective extends MissionObjective {
+	@dereferenced
+	protected TemplateReference<SharedObjectTemplate> npcTemplateToSpawn;
+
+	protected AiAgent npcTarget;
+
+	protected int objectiveStatus;
+
+	protected SceneObject activeDroid;
+
+	protected transient BountyHunterDroid droid;
+
+	@dereferenced
+	protected transient FindTargetTaskList droidTasks;
+
+	protected transient BountyHunterTargetTask targetTask;
+
+	protected boolean completedMission;
+
+	@dereferenced
+	protected transient Mutex syncMutex;
+
+	public static final int INITSTATUS = 0;
+	public static final int HASBIOSIGNATURESTATUS = 1;
+	public static final int HASTALKED = 2;
+	public static final int TARGETELIMINATEDSTATUS = 3;
+
+	public BountyMissionObjective(MissionObject mission) {
+		super(mission);
+
+		objectiveStatus = INITSTATUS;
+
+		activeDroid = null;
+		droid = null;
+
+		completedMission = false;
+
+		Logger.setLoggingName("BountyMissionObjective");
+	}
+
+	public void finalize() {
+
+	}
+
+	public void initializeTransientMembers() {
+		super.initializeTransientMembers();
+
+		Logger.setLoggingName("BountyMissionObjective");
+	}
+
+	@preLocked
+	public native void activate();
+	@preLocked
+	public native void deactivate();
+	public native void abort();
+	public native void complete();
+
+	@preLocked
+	public native void spawnTarget(final string zoneName);
+
+	public native int notifyObserverEvent(MissionObserver observer, unsigned int eventType, Observable observable, ManagedObject arg1, long arg2);
+
+	@local
+	@preLocked
+	public native void setNpcTemplateToSpawn(SharedObjectTemplate sp);
+
+	public native void updateMissionStatus(int informantLevel);
+
+	@read
+	public int getObjectiveStatus() {
+		return objectiveStatus;
+	}
+
+	@read
+	public SceneObject getArakydDroid() {
+		return activeDroid;
+	}
+
+	@preLocked
+	public void setArakydDroid(SceneObject droid) {
+		activeDroid = droid;
+	}
+
+	public native void performDroidAction(int action, SceneObject sceneObject, CreatureObject player);
+
+	@dirty
+	public native boolean hasArakydFindTask();
+
+	public native boolean playerHasMissionOfCorrectLevel(int action);
+
+	public native void updateWaypoint();
+
+	@dereferenced
+	@local
+	@dirty
+	public native Vector3 getTargetPosition();
+
+	public native void cancelAllTasks();
+
+	public native void cancelCallArakydTask();
+
+	@dirty
+	public native string getTargetZoneName();
+
+	@preLocked
+	private native void removePlayerTargetObservers();
+	@preLocked
+	private native void removeNpcTargetObservers();
+	@preLocked
+	private native void removeObserver(int observerNumber, unsigned int observerType, CreatureObject creature);
+	private native void addObserverToCreature(unsigned int observerType, CreatureObject creature);
+
+	private native boolean addPlayerTargetObservers();
+	private native void startNpcTargetTask();
+
+	@dirty
+	public native boolean isPlayerTarget();
+
+	private native void handleNpcTargetKilled(Observable observable);
+	private native int handleNpcTargetReceivesDamage(ManagedObject arg1);
+	private native void handlePlayerKilled(ManagedObject arg1);
+
+	@dereferenced
+	@local
+	@dirty
+	public Vector3 getEndPosition() {
+		return getTargetPosition();
+	}
+}

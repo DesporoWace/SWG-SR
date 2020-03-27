@@ -1,0 +1,45 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.player.sui.characterbuilderbox;
+
+import engine.service.proto.BaseMessage;
+
+import server.zone.objects.creature.CreatureObject;
+import server.zone.objects.player.sui.listbox.SuiListBox;
+
+include templates.tangible.CharacterBuilderMenuNode;
+include server.zone.objects.player.sui.SuiWindowType;
+
+class SuiCharacterBuilderBox extends SuiListBox {
+	protected transient CharacterBuilderMenuNode rootNode;
+	protected transient CharacterBuilderMenuNode currentNode;
+	
+	public SuiCharacterBuilderBox(CreatureObject player, CharacterBuilderMenuNode root) {
+		super(player, SuiWindowType.CHARACTER_BUILDER_LIST, SuiListBox.HANDLETHREEBUTTON);
+		
+		Logger.setLoggingName("SuiCharacterBuilderBox");
+		
+		setPromptTitle("Character Builder");
+		
+		setPromptText("Provided below are items which the developers feel are necessary to complete the current testing objectives. Please select only the items which you require.");
+		
+		rootNode = root;
+		
+		currentNode = root;
+	}
+	
+	@local
+	public native BaseMessage generateMessage();
+	
+	@local
+	public native CharacterBuilderMenuNode getCurrentNode();
+	
+	@local
+	public native void setCurrentNode(CharacterBuilderMenuNode node);
+	
+	public boolean isCharacterBuilderBox() {
+		return true;
+	}
+}

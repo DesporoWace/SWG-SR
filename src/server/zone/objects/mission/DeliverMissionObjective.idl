@@ -1,0 +1,84 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.mission;
+
+import server.zone.objects.mission.MissionObject;
+import server.zone.objects.mission.MissionObjective;
+import server.zone.objects.creature.CreatureObject;
+import server.zone.objects.tangible.TangibleObject;
+import server.zone.objects.creature.ai.AiAgent;
+
+@json
+class DeliverMissionObjective extends MissionObjective {
+	protected TangibleObject item;
+
+	@weakReference
+	protected AiAgent targetSpawn;
+
+	@weakReference
+	protected AiAgent destinationSpawn;
+
+	protected int objectiveStatus;
+
+	public static final int INITSTATUS = 0;
+	public static final int PICKEDUPSTATUS = 1;
+	public static final int DELIVEREDSTATUS = 2;
+
+	public DeliverMissionObjective(MissionObject mission) {
+		super(mission);
+
+		objectiveStatus = INITSTATUS;
+
+		Logger.setLoggingName("DeliverMissionObjective");
+	}
+
+	public native void finalize() {
+		//Logger.info("deleting from memory", true);
+	}
+
+	public void initializeTransientMembers() {
+		super.initializeTransientMembers();
+
+		Logger.setLoggingName("DeliverMissionObjective");
+	}
+
+	@dirty
+	public native TangibleObject getItem() {
+		return item;
+	}
+
+	@read
+	public int getObjectiveStatus() {
+		return objectiveStatus;
+	}
+
+	@preLocked
+	public abstract native void activate();
+	@preLocked
+	public abstract native void deactivate();
+	@preLocked
+	public native boolean activateWithResult();
+	public abstract native void abort();
+	public abstract native void complete();
+
+	public native void despawnNpcs();
+
+	@preLocked
+	public abstract native void updateMissionStatus(CreatureObject player);
+
+	public abstract native boolean updateMissionTarget(CreatureObject player);
+
+	@dirty
+	@weakReference
+	public AiAgent getTargetSpawn() {
+		return targetSpawn;
+	}
+
+	@dirty
+	@weakReference
+	public AiAgent getDestinationSpawn() {
+		return destinationSpawn;
+	}
+}

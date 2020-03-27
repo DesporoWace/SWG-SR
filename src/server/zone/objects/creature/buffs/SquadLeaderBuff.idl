@@ -1,0 +1,112 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.creature.buffs;
+
+import server.zone.objects.creature.CreatureObject;
+import server.zone.objects.player.PlayerObject;
+import server.zone.objects.creature.buffs.Buff;
+import server.zone.objects.creature.buffs.SquadLeaderBuffObserver;
+include server.zone.objects.creature.commands.SquadLeaderCommand;
+include server.zone.managers.object.ObjectManager;
+include server.zone.objects.creature.buffs.BuffType;
+include templates.params.ObserverEventType;
+include server.zone.objects.scene.SceneObjectType;
+
+ @json
+ class SquadLeaderBuff extends Buff {
+	protected SquadLeaderBuffObserver playerObserver;
+	protected SquadLeaderBuffObserver leaderObserver;
+	protected CreatureObject player;
+	protected CreatureObject leader;
+
+	public SquadLeaderBuff(CreatureObject creo, CreatureObject lead, unsigned int buffCRC, int duration) {
+		super(creo, buffCRC, duration, BuffType.SKILL);
+
+		player = creo;
+		leader = lead;
+	}
+
+	public void finalize() {
+		player.dropObserver(ObserverEventType.PARENTCHANGED, playerObserver);
+		player.dropObserver(ObserverEventType.BHTEFCHANGED, playerObserver);
+		player.dropObserver(ObserverEventType.FACTIONCHANGED, playerObserver);
+		leader.dropObserver(ObserverEventType.PARENTCHANGED, leaderObserver);
+		leader.dropObserver(ObserverEventType.FACTIONCHANGED, leaderObserver);
+		leader.dropObserver(ObserverEventType.OBJECTDESTRUCTION, leaderObserver);
+		leader.dropObserver(ObserverEventType.CREATUREREVIVED, leaderObserver);
+	}
+
+	@dirty
+	public CreatureObject getPlayer() {
+		return player;
+	}
+
+	@dirty
+	public CreatureObject getLeader() {
+		return leader;
+	}
+
+	@preLocked
+	public void activate() {
+		if (player == null)
+			return;
+
+		if (leader == null || player.getGroupID() != leader.getGroupID()) {
+			player.removeBuff(super.buffCRC);
+			return;
+		}
+
+		doActivate(true);
+	}
+
+	@preLocked
+	public void doActivate(boolean doCheck) {
+		if (doCheck && !qualifiesForActivation())
+			return;
+
+		super.activate();
+	}
+
+	@dirty
+	public boolean qualifiesForActivation() {
+		if (player == null || leader == null || leader.isDead() || leader.isIncapacitated())
+			return false;
+
+		return SquadLeaderCommand.isValidGroupAbilityTarget(leader, player, false);
+	}
+
+	@dirty
+	public boolean checkRenew() {
+		if (leader == null || player == null || player.getGroupID() != leader.getGroupID()) {
+			return false;
+		}
+
+		return true;
+	}
+
+	@preLocked
+	public void addObservers() {
+		SquadLeaderBuffObserver playObserver = new SquadLeaderBuffObserver(this);
+		ObjectManager.instance().persistObject(playObserver, 1, "buffs");
+		playerObserver = playObserver;
+
+		SquadLeaderBuffObserver leadObserver = new SquadLeaderBuffObserver(this);
+		ObjectManager.instance().persistObject(leadObserver, 1, "buffs");
+		leaderObserver = leadObserver;
+
+		player.registerObserver(ObserverEventType.PARENTCHANGED, playerObserver);
+		player.registerObserver(ObserverEventType.BHTEFCHANGED, playerObserver);
+		player.registerObserver(ObserverEventType.FACTIONCHANGED, playerObserver);
+		leader.registerObserver(ObserverEventType.PARENTCHANGED, leaderObserver);
+		leader.registerObserver(ObserverEventType.FACTIONCHANGED, leaderObserver);
+		leader.registerObserver(ObserverEventType.OBJECTDESTRUCTION, leaderObserver);
+		leader.registerObserver(ObserverEventType.CREATUREREVIVED, leaderObserver);
+	}
+
+	@read
+	public boolean removeOnClearBuffs() {
+		return false;
+	}
+}

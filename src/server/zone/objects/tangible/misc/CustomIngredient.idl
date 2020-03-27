@@ -1,0 +1,81 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.tangible.misc;
+
+import server.zone.objects.tangible.TangibleObject;
+import server.zone.packets.scene.AttributeListMessage;
+import server.zone.objects.creature.CreatureObject;
+include templates.SharedObjectTemplate;
+import server.zone.packets.object.ObjectMenuResponse;
+include server.zone.objects.manufactureschematic.craftingvalues.CraftingValues;
+include system.util.VectorMap;
+
+@lua
+@json
+class CustomIngredient extends TangibleObject {
+	@dereferenced
+	protected VectorMap<string, int> objectAttributes;
+	boolean isBaseIngredient;
+
+	public CustomIngredient() {
+		objectAttributes.setAllowOverwriteInsertPlan();
+		setLoggingName("CustomIngredient");
+
+		isBaseIngredient = false;
+	}
+
+	/**
+	 * Reads and sets the template data from a SharedTangibleObjectTemplate LuaObject
+	 * @pre { templateData is a valid pointer }
+	 * @post { TangibleObject members are initialized }
+	 * @param templateData templateData points to the SharedTangibleObjectTemplate LuaObject that is used to initialize the TangibleObject members
+	 */
+	@local
+	public native void loadTemplateData(SharedObjectTemplate templateData);
+
+	/**
+	 * Fills the attribute list message options that are sent to player creature
+	 * @pre { }
+	 * @post { }
+	 * @param msg attribute list message with the attributes
+	 * @param object player creature to which the message is sent
+	 */
+	@local
+	@dirty
+	public native void fillAttributeList(AttributeListMessage msg, CreatureObject object);
+
+	public native void addAttribute(final string attribute, int value);
+
+	@local
+	public native void updateCraftingValues(CraftingValues values, boolean firstUpdate);
+
+	@dirty
+	public native void clearAttributes() {
+		objectAttributes.removeAll();
+	}
+
+	@local
+	@dirty
+	public native int getAttributeAndValue(string attribute, int index);
+
+	@dirty
+	public int getAttributeValue(int index) {
+		return objectAttributes.get(index);
+	}
+
+	@dirty
+	public native int getResourceValue(int average);
+
+	@dirty
+	public native int getValueOf(int index);
+
+	@dirty
+	public native int getValueOf(final string attribute);
+
+	@dirty
+	public boolean isCustomIngredient() {
+		return true;
+	}
+}

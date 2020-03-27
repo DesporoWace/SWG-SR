@@ -1,0 +1,15 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.creature.conversation;
+
+include server.zone.objects.creature.conversation.ConversationObserver;
+include server.zone.objects.creature.conversation.screenhandlers.PetTrainingScreenHandler;
+
+class PetTrainingConversationObserver extends ConversationObserver {
+	@dereferenced
+	PetTrainingScreenHandler screenHandler;
+
+	public native PetTrainingConversationObserver(unsigned int convoTemplateCRC);
+}

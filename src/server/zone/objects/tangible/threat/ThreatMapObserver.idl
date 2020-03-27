@@ -1,0 +1,23 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions. */
+
+package server.zone.objects.tangible.threat;
+
+include engine.core.ManagedObject;
+import engine.util.Observer;
+import engine.util.Observable;
+import server.zone.objects.tangible.TangibleObject;
+
+class ThreatMapObserver extends Observer {
+	
+	@weakReference
+	protected TangibleObject self;
+	
+	public ThreatMapObserver(TangibleObject me) {
+		self = me;
+	}
+
+	public native int notifyObserverEvent(unsigned int eventType, Observable observable, ManagedObject arg1, long arg2);
+
+}

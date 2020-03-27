@@ -1,0 +1,31 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions. */
+
+package server.zone.objects.tangible.components.droid;
+
+include engine.core.ManagedObject;
+import engine.util.Observer;
+import engine.util.Observable;
+import server.zone.objects.tangible.components.droid.DroidPlaybackModuleDataComponent;
+
+class DroidPlaybackObserver extends Observer {
+	// reference to the droid module that is listening
+	@weakReference
+	protected DroidPlaybackModuleDataComponent module;
+
+	protected int slot;
+
+	public DroidPlaybackObserver(DroidPlaybackModuleDataComponent m) {
+		module = m;
+		slot = -1;
+	}
+	
+	@dirty
+	public void setSlot(int i) {
+		slot = i;
+	}
+	
+	@dirty
+	public native int notifyObserverEvent(unsigned int eventType, Observable observable, ManagedObject arg1, long arg2);	
+}

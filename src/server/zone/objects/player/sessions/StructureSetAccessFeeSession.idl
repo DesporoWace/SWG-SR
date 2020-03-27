@@ -1,0 +1,62 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions. */
+
+package server.zone.objects.player.sessions;
+
+import engine.log.Logger;
+import engine.util.Facade;
+import server.zone.objects.creature.CreatureObject;
+import server.zone.objects.player.PlayerObject;
+import server.zone.objects.building.BuildingObject;
+include server.zone.objects.scene.SessionFacadeType;
+include server.zone.objects.player.sui.inputbox.SuiInputBox;
+
+class StructureSetAccessFeeSession extends Facade {
+	@weakReference
+	protected CreatureObject player;
+
+	@weakReference
+	protected BuildingObject structure;
+
+	protected SuiInputBox feeAmountBox;
+
+	protected SuiInputBox durationBox;
+
+	protected int accessFee;
+
+	public StructureSetAccessFeeSession(CreatureObject play, BuildingObject struc) {
+
+		player = play;
+		structure = struc;
+
+		feeAmountBox = null;
+		durationBox = null;
+
+		accessFee = 0;
+
+		Logger.setLoggingName("StructureSetAccessFeeSession");
+		Logger.setLogging(true);
+	}
+
+	public native int initializeSession();
+
+	public int cancelSession() {
+		CreatureObject strongRef = player;
+		if (strongRef != null)
+			strongRef.dropActiveSession(SessionFacadeType.SETSTRUCTUREACCESSFEE);
+
+		clearSession();
+		return 0;
+	}
+
+	public native int clearSession();
+
+	public native void promptSetAccessFee();
+
+	public native void setAccessFee(final int fee);
+
+	public native void promptSetAccessDuration();
+
+	public native void setAccessDuration(final int duration);
+}

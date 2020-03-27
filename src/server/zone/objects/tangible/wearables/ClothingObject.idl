@@ -1,0 +1,26 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.tangible.wearables;
+
+import server.zone.objects.tangible.wearables.WearableObject;
+include server.zone.objects.manufactureschematic.craftingvalues.CraftingValues;
+
+ @json
+ class ClothingObject extends WearableObject {
+	public ClothingObject() {
+		Logger.setLoggingName("ClothingObject");
+	}
+
+	public void initializeTransientMembers() {
+		super.initializeTransientMembers();
+
+		Logger.setLoggingName("ClothingObject");
+	}
+
+	@local
+	public void updateCraftingValues(CraftingValues values, boolean firstUpdate) {
+		super.updateCraftingValues(values, firstUpdate);
+	}
+}

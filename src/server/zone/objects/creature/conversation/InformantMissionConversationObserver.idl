@@ -1,0 +1,16 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.creature.conversation;
+
+include server.zone.objects.creature.conversation.ConversationObserver;
+include server.zone.objects.creature.conversation.screenhandlers.InformantMissionScreenHandler;
+
+class InformantMissionConversationObserver extends ConversationObserver {
+	@dereferenced
+	InformantMissionScreenHandler informantMissionScreenHandler;
+
+	public native InformantMissionConversationObserver(unsigned int convoTemplateCRC);
+}
+

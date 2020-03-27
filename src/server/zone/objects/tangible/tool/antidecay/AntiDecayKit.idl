@@ -1,0 +1,49 @@
+
+package server.zone.objects.tangible.tool.antidecay;
+
+import engine.log.Logger;
+import server.zone.objects.tangible.Container;
+import server.zone.objects.creature.CreatureObject;
+import server.zone.packets.object.ObjectMenuResponse;
+import server.zone.objects.scene.SceneObject;
+
+@json
+class AntiDecayKit extends Container {
+	protected boolean used;
+
+	public AntiDecayKit() {
+		used = false;
+
+		Logger.setLoggingName("AntiDecayKit");
+	}
+
+	public native void initializeTransientMembers();
+
+	@local
+	@dirty
+	public native void fillObjectMenuResponse(ObjectMenuResponse menuResponse, CreatureObject player);
+
+	@preLocked
+	@arg1preLocked
+	public native int handleObjectMenuSelect(CreatureObject player, byte selectedID);
+
+	public native int canAddObject(SceneObject object, int containmentType, string errorDescription);
+
+	@preLocked
+	@arg1preLocked
+	public native void doApplyAntiDecay(CreatureObject player);
+
+	@preLocked
+	@arg1preLocked
+	public native void doRetrieveItem(CreatureObject player);
+
+	@read
+	public boolean isUsed() {
+		return used;
+	}
+
+	@preLocked
+	public void setUsed(boolean use) {
+		used = use;
+	}
+}

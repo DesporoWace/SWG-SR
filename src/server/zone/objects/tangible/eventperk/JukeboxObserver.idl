@@ -1,0 +1,22 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions. */
+
+package server.zone.objects.tangible;
+
+include engine.core.ManagedObject;
+import engine.util.Observer;
+import engine.util.Observable;
+import server.zone.objects.tangible.eventperk.Jukebox;
+
+class JukeboxObserver extends Observer {
+	@weakReference
+	protected Jukebox jukebox;
+	
+	public JukeboxObserver(Jukebox jbox) {
+		jukebox = jbox;
+	}
+
+	@dirty
+	public native int notifyObserverEvent(unsigned int eventType, Observable observable, ManagedObject arg1, long arg2);	
+}

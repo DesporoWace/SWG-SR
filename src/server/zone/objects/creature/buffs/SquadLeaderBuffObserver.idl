@@ -1,0 +1,24 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions. */
+
+package server.zone.objects.creature.buffs;
+
+include engine.core.ManagedObject;
+import engine.util.Observer;
+import engine.util.Observable;
+import server.zone.objects.creature.buffs.SquadLeaderBuff;
+import server.zone.objects.creature.CreatureObject;
+
+class SquadLeaderBuffObserver extends Observer {
+	@weakReference
+	protected SquadLeaderBuff buff;
+
+	public SquadLeaderBuffObserver(SquadLeaderBuff b) {
+		buff = b;
+	}
+
+	public native int notifyObserverEvent(unsigned int eventType, Observable observable, ManagedObject arg1, long arg2);
+
+	public native void handleObserverEvent(CreatureObject player, SquadLeaderBuff slBuff);
+}

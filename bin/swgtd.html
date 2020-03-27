@@ -1,0 +1,116 @@
+
+<html>
+	<head>
+		<title>SWG Talk Dirty JS</title>
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+		<style>
+			body{    background-image:url( "http://swgsremu.com/wp-content/uploads/2018/10/sr-home-video-bg.jpg" );
+				/*background-repeat: tiled;*/
+				background-size:100%;
+				text-shadow:1px 1px 16px black, -1px -1px 16px gold;
+				color:white;
+				font-weight:bolder;
+				background-color:#0a0200;
+				background-repeat: no-repeat;
+			}
+
+			.off{
+				display:none;
+			}
+
+			h1{
+			    text-shadow:2px 2px 10px black, -2px -2px 10px black, -1px 1px 3px yellow;
+			}
+
+			#socialbtn{
+			    font-size:36px;
+			    bottom:20px;
+			}
+
+			#socialbtn a{
+			    color:gold;
+			    opacity:.6;
+			}
+
+			#socialbtn a:hover{
+			    color:gold;
+			    opacity:.8;
+			}
+
+			#socialbtn a:active{
+			    color:red;
+			    opacity:.4;
+			}
+
+			li{
+			    font-size:12px;
+			}
+
+			.link{
+				box-sizing: border-box;
+				color:white;
+				float: left;
+				width: 100%;
+				padding: 50px;
+				border:2px solid black;
+				box-shadow:2px 2px 4px white, -1px -1px 4px grey, inset 1px 1px 2px black;
+				text-shadow:1px 1px 3px grey;
+			}
+
+			.link:hover{
+				color:gold;
+			}
+
+			h1:hover{
+				text-shadow:4px 4px 8px gold, -4px -4px 8px gold;
+			}
+		</style>
+	</head>
+	<body>
+		<div style="height:300px" id="strt">
+			<center>
+				<h2>SWG Talk Dirty JS:</h2>
+				<br><br>
+				<a  onclick=start(this);>
+					<img src="SWGTD/sr-jedi-formal-60.png">
+					<br>
+					<span>(Click To Start)</span>
+				</a>
+				<div id="socialbtn"><br>
+					<center>
+						<a href="http://www.swgsremu.com"><i class="fas fa-home"></i></a>
+						<a href="http://discordapp.com/invite/k8QK2MB"><i class="fab fa-discord"></i></a>
+						<a href="http://www.facebook.com/SentinelsRepublicEmu/?epa=SEARCH_BOX/"><i class="fab fa-facebook-f"></i></a>
+						<a href="https://twitter.com/SentinelsRepEMU"><i class="fab fa-twitter"></i></a>
+					</center>
+				</div>
+			</center>
+		</div>
+		<div class ="off" id="main">
+			<center>
+				<h1 onclick='location.reload(true);'>SWGTD Main Menu</h1>
+				<div>
+					<a class="link" href="SWGTD/lootGroupBuilder.html" >Loot Group Builder</a>
+					<a class="link" href="SWGTD/lootTemplateBuilder.html">Loot Template Builder</a>
+					<a class="link" href="SWGTD/iffBatchMaker.html">IFF Batch Maker</a>
+					<a class="link" href="SWGTD/SWGTD_Convo_Editor_Beta.html">Conversation Editor</a>
+				</div>
+				
+			</center>
+		</div>
+		<script>
+			function start(ob){
+			    ob.style.display = "none";
+			    document.getElementById("strt")
+				.style.display = "none";
+			    document.getElementById("main")
+				.style.display = "block";
+			}
+
+			window.onload=function(){
+			    
+			}
+		</script>
+    </body>
+</html>
+

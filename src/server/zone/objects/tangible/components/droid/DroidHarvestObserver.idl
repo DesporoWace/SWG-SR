@@ -1,0 +1,23 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions. */
+
+package server.zone.objects.tangible.components.droid;
+
+include engine.core.ManagedObject;
+import engine.util.Observer;
+import engine.util.Observable;
+import server.zone.objects.tangible.components.droid.DroidHarvestModuleDataComponent;
+
+class DroidHarvestObserver extends Observer {
+	// reference to the droid module that is listening
+	@weakReference
+	protected DroidHarvestModuleDataComponent module;
+
+	public DroidHarvestObserver(DroidHarvestModuleDataComponent m) {
+		module = m;
+	}
+	
+	@dirty
+	public native int notifyObserverEvent(unsigned int eventType, Observable observable, ManagedObject arg1, long arg2);	
+}

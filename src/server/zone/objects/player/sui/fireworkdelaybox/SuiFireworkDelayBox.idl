@@ -1,0 +1,26 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.player.sui.transferbox;
+
+import server.zone.objects.creature.CreatureObject;
+import server.zone.objects.player.sui.transferbox.SuiTransferBox;
+
+class SuiFireworkDelayBox extends SuiTransferBox {
+
+	protected unsigned int fireworkIndex;
+
+	public SuiFireworkDelayBox(CreatureObject player, unsigned int windowType, unsigned int index) {
+		super(player, windowType);
+		fireworkIndex = index;
+	}
+
+	public unsigned int getFireworkIndex() {
+		return fireworkIndex;
+	}
+
+	public boolean isFireworkDelayBox() {
+		return true;
+	}
+}

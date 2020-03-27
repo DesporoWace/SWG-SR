@@ -1,0 +1,32 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.manager;
+
+import engine.core.ManagedService;
+import engine.log.Logger;
+
+import server.zone.ZoneServer;
+import server.zone.ZoneProcessServer;
+
+class ZoneManager extends ManagedService implements Logger {
+	protected transient ZoneServer zoneServer;
+
+	protected transient ZoneProcessServer zoneProcessor;
+
+	public ZoneManager(@dereferenced final string name) {
+		Logger.setLoggingName(name);
+
+		Logger.setLogging(true);
+		Logger.setGlobalLogging(true);
+
+		zoneServer = null;
+		zoneProcessor = null;
+	}
+
+	public void setZoneProcessor(ZoneProcessServer server) {
+		zoneServer = server.getZoneServer();
+		zoneProcessor = server;
+	}
+}

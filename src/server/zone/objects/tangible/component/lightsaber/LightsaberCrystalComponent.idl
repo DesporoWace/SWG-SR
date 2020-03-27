@@ -1,0 +1,210 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.tangible.component.lightsaber;
+
+import server.zone.objects.tangible.component.Component;
+import server.zone.packets.scene.AttributeListMessage;
+include server.zone.packets.object.ObjectMenuResponse;
+include server.zone.objects.creature.CreatureObject;
+import server.zone.objects.tangible.TangibleObject;
+
+include server.zone.objects.manufactureschematic.craftingvalues.CraftingValues;
+
+@json
+@lua
+class LightsaberCrystalComponent extends Component {
+	public final static int POOR = 0;
+	public final static int FAIR = 1;
+	public final static int GOOD = 2;
+	public final static int QUALITY = 3;
+	public final static int SELECT = 4;
+	public final static int PREMIUM = 5;
+	public final static int FLAWLESS = 6;
+
+	protected int damage;
+	protected int color;
+	protected int quality;
+	protected float attackSpeed;
+	protected int sacHealth;
+	protected int sacAction;
+	protected int sacMind;
+	protected int woundChance;
+	protected int itemLevel;
+	protected float floatForceCost;
+
+	protected unsigned long ownerID;
+	protected string ownerName;
+
+	// TODO: Remove these after a server wipe
+	protected int forceCost;
+	protected int minimumDamage;
+	protected int maximumDamage;
+	protected string postTuneName;
+	// ----
+
+	public LightsaberCrystalComponent() {
+		attackSpeed = 0.0;
+		sacHealth = 0;
+		sacAction = 0;
+		sacMind = 0;
+		woundChance = 0;
+		color = 0;
+		quality = 0;
+		itemLevel = 0;
+		floatForceCost = 0.0;
+
+		ownerID = 0;
+		ownerName = "";
+
+		// TODO: Remove these after a server wipe
+		forceCost = 0;
+		minimumDamage = 0;
+		maximumDamage = 0;
+		postTuneName = "";
+		// ----
+
+		Logger.setLoggingName("LightsaberCrystal");
+	}
+
+	public native void initializeTransientMembers();
+
+	public native void notifyLoadFromDatabase();
+
+	@local
+	public native void updateCraftingValues(CraftingValues values, boolean firstUpdate);
+
+	/**
+	 * Fills the attribute list message options that are sent to player creature
+	 * @pre { }
+	 * @post { }
+	 * @param msg attribute list message with the attributes
+	 * @param object player creature to which the message is sent
+	 */
+	@local
+	public native void fillAttributeList(AttributeListMessage msg, CreatureObject object);
+
+	@local
+	public native void fillObjectMenuResponse(ObjectMenuResponse menuResponse, CreatureObject player);
+
+	public native int handleObjectMenuSelect(CreatureObject player, byte selectedID);
+
+	public native boolean hasPlayerAsParent(CreatureObject player);
+
+	public native void tuneCrystal(CreatureObject player);
+
+	public native void updateCrystal(int value);
+
+	public native int inflictDamage(TangibleObject attacker, int damageType, float damage, boolean destroy, boolean notifyClient = true);
+
+	public native void generateCrystalStats();
+	public native void validateCrystalStats();
+	public native int getRandomizedStat(int min, int max, int itemLevel);
+	public native float getRandomizedStat(float min, float max, int itemLevel);
+	public native int getCrystalQuality();
+
+	@read
+	public int getDamage() {
+		return damage;
+	}
+
+	@read
+	public float getForceCost() {
+		return floatForceCost;
+	}
+
+	@read
+	public int getSacHealth() {
+		return sacHealth;
+	}
+
+	@read
+	public float getAttackSpeed() {
+		return attackSpeed;
+	}
+
+	@read
+	public int getSacAction() {
+		return sacAction;
+	}
+
+	@read
+	public int getSacMind() {
+		return sacMind;
+	}
+
+	@read
+	public int getWoundChance() {
+		return woundChance;
+	}
+
+	@read
+	public unsigned long getOwnerID() {
+		return ownerID;
+	}
+
+	@read
+	public int getQuality() {
+		return quality;
+	}
+
+	public void setQuality(int qual) {
+		quality = qual;
+	}
+
+	@read
+	public int getColor() {
+		return color;
+	}
+
+	public void setColor(int value) {
+		color = value;
+	}
+
+	public void setOwnerID(unsigned long value) {
+		ownerID = value;
+	}
+
+	public void setItemLevel(int value) {
+		itemLevel = value;
+	}
+
+	public void setMinimumDamage(int value) {
+		minimumDamage = value;
+	}
+
+	public void setMaximumDamage(int value) {
+		maximumDamage = value;
+	}
+
+	public void setForceCost(float value) {
+		floatForceCost = value;
+	}
+
+	public void setSacHealth(int value) {
+		sacHealth = value;
+	}
+
+	public void setSacAction(int value) {
+		sacAction = value;
+	}
+
+	public void setSacMind(int value) {
+		sacMind = value;
+	}
+
+	public void setAttackSpeed(float value) {
+		attackSpeed = value;
+	}
+
+	public void setWoundChance(int value) {
+		woundChance = value;
+	}
+
+	@dirty
+	public boolean isLightsaberCrystalObject() {
+		return true;
+	}
+}
+

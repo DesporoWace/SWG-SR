@@ -1,0 +1,109 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.tangible.fscsobject;
+
+import server.zone.objects.tangible.TangibleObject;
+import server.zone.packets.scene.AttributeListMessage;
+import server.zone.objects.creature.CreatureObject;
+import system.lang.String;
+import system.lang.Time;
+include system.lang.System;
+
+@lua
+@json
+class FsCsObject extends TangibleObject {
+	@dereferenced
+	protected Time createdTime;
+
+	// TODO: Remove this after a wipe
+	protected int phaseDuration;
+
+	protected unsigned long newPhaseDuration;
+
+	public FsCsObject() {
+		setLoggingName("FsCsObject");
+		createdTime.updateToCurrentTime();
+
+		// Remove after wipe
+		phaseDuration = 0;
+
+		//newPhaseDuration = 1814400000; // 3 week default
+		newPhaseDuration = 302400000; // 1 week phase times on SR
+	}
+
+	// Not needed after a wipe
+	public void initializeTransientMembers() {
+		super.initializeTransientMembers();
+
+		if (phaseDuration != 0) {
+			phaseDuration = 0;
+			//newPhaseDuration = 1814400000;
+			newPhaseDuration = 302400000;
+		}
+	}
+
+	/**
+	 * Fills the attribute list message options that are sent to player creature
+	 * @pre { }
+	 * @post { }
+	 * @param msg attribute list message with the attributes
+	 * @param object player creature to which the message is sent
+	 */
+	@local
+	@dirty
+	public void fillAttributeList(AttributeListMessage msg, CreatureObject object) {
+		int decay = getDecayPercent();
+
+		string decayStr = String.valueOf(decay) + "%";
+
+		msg.insertAttribute("fs_p3_item_decay_rate", decayStr);
+
+		if (decay == 100) {
+			msg.insertAttribute("fs_p3_item_decay_in", "Already Decayed");
+			return;
+		}
+
+		unsigned long itemAge = System.getMiliTime() - createdTime.getMiliTime();
+		unsigned long timeLeft = newPhaseDuration - itemAge;
+
+		int days = (timeLeft / 1000 / 60 / 60 / 24);
+		int hours = ((timeLeft / 1000 / 60 / 60) % 24);
+		int minutes = ((timeLeft / 1000 / 60) % 60);
+
+		string timeLeftStr;
+
+		if (timeLeft <= 0)
+			timeLeftStr = "Already Decayed";
+		else
+			timeLeftStr = String.valueOf(days) + " days, " + String.valueOf(hours) + " hours, " + String.valueOf(minutes) + " minutes";
+
+		msg.insertAttribute("fs_p3_item_decay_in", timeLeftStr);
+	}
+
+	@dirty
+	public int getDecayPercent() {
+		if (isDisabled())
+			return 100;
+
+		unsigned long itemAge = System.getMiliTime() - createdTime.getMiliTime();
+		int decay = (int)((itemAge * 100) / newPhaseDuration);
+
+		if (decay >= 100) {
+			decay = 100;
+			setDisabled(true);
+		}
+
+		return decay;
+	}
+
+	@dirty
+	public unsigned long getPhaseDuration() {
+		return newPhaseDuration;
+	}
+
+	public void setPhaseDuration(unsigned long dur) {
+		newPhaseDuration = dur;
+	}
+}

@@ -1,0 +1,116 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.managers.director;
+
+import engine.core.ManagedObject;
+include server.zone.objects.scene.SceneObject;
+import server.zone.managers.director.ScreenPlayTask;
+
+@json
+class PersistentEvent extends ManagedObject {
+	protected int timeStamp;
+	protected unsigned long miliDiff;
+	protected unsigned long curTime;
+	protected string key;
+	protected string play;
+	protected string args;
+	protected string eventName;
+	protected boolean eventExecuted;
+
+	@weakReference
+	transient ScreenPlayTask screenplayTask;
+
+	@weakReference
+	protected SceneObject obj;
+
+	public PersistentEvent() {
+		eventExecuted = false;
+		timeStamp = 0;
+		miliDiff = 0;
+		curTime = 0;
+	}
+
+	@local
+	public void setScreenplayTask(ScreenPlayTask task) {
+		screenplayTask = task;
+	}
+
+	@local
+	@read
+	@weakReference
+	public ScreenPlayTask getScreenplayTask() {
+		return screenplayTask;
+	}
+
+	@read
+	public unsigned long getMiliDiff() {
+		return miliDiff;
+	}
+
+	@read
+	public final string getKey() {
+		return key;
+	}
+
+	@read
+	public final string getScreenplay() {
+		return play;
+	}
+
+	@read
+	public final string getArgs() {
+		return args;
+	}
+
+	@weakReference
+	@read
+	public SceneObject getObject() {
+		return obj;
+	}
+
+	@read
+	public unsigned long getCurTime() {
+		return curTime;
+	}
+
+	@read
+	public final string getEventName() {
+		return eventName;
+	}
+
+	public void setEventName(final string en) {
+		eventName = en;
+	}
+
+	public void setCurTime(unsigned long time) {
+		curTime = time;
+	}
+
+	public void setMiliDiff(unsigned long mdiff) {
+		miliDiff = mdiff;
+	}
+
+	public void setKey(final string k) {
+		key = k;
+	}
+
+	public void setScreenplay(final string sp) {
+		play = sp;
+	}
+
+	public void setArgs(final string ar) {
+		args = ar;
+	}
+
+	public void setObject(SceneObject o) {
+		obj = o;
+	}
+
+	public void setEventExecuted(boolean val) {
+		eventExecuted = val;
+	}
+
+	public native void loadTransientTask();
+}

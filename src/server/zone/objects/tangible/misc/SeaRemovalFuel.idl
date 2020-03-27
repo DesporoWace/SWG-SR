@@ -1,0 +1,105 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.tangible.searemovalfuel;
+
+import server.zone.objects.tangible.TangibleObject;
+import server.zone.packets.scene.AttributeListMessage;
+import server.zone.objects.creature.CreatureObject;
+import system.lang.String;
+import system.lang.Time;
+include system.lang.System;
+
+@lua
+class SeaRemovalFuel extends TangibleObject {
+	@dereferenced
+	protected Time createdTime;
+
+	// TODO: Remove this after a wipe
+	protected int fuelDuration;
+	
+	protected unsigned long newFuelDuration;
+
+	public SeaRemovalFuel() {
+		setLoggingName("SeaRemovalFuel");
+		createdTime.updateToCurrentTime();
+
+		// Remove after wipe
+		fuelDuration = 0;
+		
+		newFuelDuration = 3600000; // 1 hour default
+	}
+	
+	// Not needed after a wipe
+	public void initializeTransientMembers() {
+		super.initializeTransientMembers();
+
+		if (fuelDuration != 0) {
+			fuelDuration = 0;
+			newFuelDuration = 3600000;
+		}
+	}
+
+	/**
+	 * Fills the attribute list message options that are sent to player creature
+	 * @pre { }
+	 * @post { }
+	 * @param msg attribute list message with the attributes
+	 * @param object player creature to which the message is sent
+	 */
+	@local
+	@dirty
+	public void fillAttributeList(AttributeListMessage msg, CreatureObject object) {
+		int decay = getDecayPercent();
+
+		string decayStr = String.valueOf(decay) + "%";
+
+		msg.insertAttribute("sea_removal_fuel_decay_rate", decayStr);
+		
+		if (decay == 100) {
+			msg.insertAttribute("sea_removal_fuel_decay_in", "Already Inert");
+			return;
+		}
+
+		unsigned long itemAge = System.getMiliTime() - createdTime.getMiliTime();
+		unsigned long timeLeft = newFuelDuration - itemAge;
+
+		int minutes = ((timeLeft / 1000 / 60) % 60);
+		int seconds = ((timeLeft / 1000) % 60);
+
+		string timeLeftStr;
+
+		if (timeLeft <= 0)
+			timeLeftStr = "Already Decayed";
+		else
+			timeLeftStr = String.valueOf(minutes) + " minutes, " + String.valueOf(seconds) + " seconds";
+
+		msg.insertAttribute("sea_removal_fuel_decay_in", timeLeftStr);
+	}
+
+	@dirty
+	public int getDecayPercent() {
+		if (isDisabled())
+			return 100;
+		
+		unsigned long itemAge = System.getMiliTime() - createdTime.getMiliTime();
+		int decay = (int)((itemAge * 100) / newFuelDuration);
+
+		if (decay >= 100) {
+			decay = 100;
+			setDisabled(true);
+		}
+
+		return decay;
+	}
+
+	@dirty
+	public unsigned long getfuelDuration() {
+		return newFuelDuration;
+	}
+
+	public void setfuelDuration(unsigned long dur) {
+		newFuelDuration = dur;
+	}
+}

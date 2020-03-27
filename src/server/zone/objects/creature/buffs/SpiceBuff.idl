@@ -1,0 +1,33 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+package server.zone.objects.creature.buffs;
+
+import server.zone.objects.creature.CreatureObject;
+import server.zone.objects.creature.buffs.Buff;
+include server.zone.objects.creature.buffs.BuffType;
+include engine.log.Logger;
+
+ @json
+ class SpiceBuff extends Buff {
+	public SpiceBuff(CreatureObject creo, final string name, unsigned int buffCRC, int duration) {
+		super(creo, buffCRC, duration, BuffType.SPICE);
+
+		super.buffName = name;
+
+		Logger.setLoggingName("SpiceBuff " + name);
+	}
+
+	@preLocked
+	public void activate(boolean applyModifiers) {
+		super.creature.sendSystemMessage("@spice/spice:" + super.buffName + "_consume");
+
+		super.activate(true);
+	}
+
+	@preLocked
+	public native void deactivate(boolean removeModifiers);
+
+	public native void setDownerAttributes(CreatureObject creature, Buff buff);
+}
